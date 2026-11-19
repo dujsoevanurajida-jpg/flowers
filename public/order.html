@@ -1,0 +1,63 @@
+<!DOCTYPE html><html lang="ru"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Оформление — Bloom Сургут</title>
+<link rel="stylesheet" href="css/style.css"></head><body>
+
+<header class="nav">
+  <a class="logo" href="index.html">Bloom</a>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="catalog.html">Каталог</a>
+    <a href="order.html" class="active">Оформление <span id="cart-count" class="badge">0</span></a>
+  </nav>
+</header>
+
+<main class="wrap narrow">
+  <h1>Ваш заказ:</h1>
+  <div id="cart-list"></div>
+  <p class="sum-line">Сумма: <b id="sum">0 ₽</b></p>
+
+  <form id="order-form">
+    <label>Ваше имя<input name="name" required placeholder="Мария"></label>
+    <label>Ваш телефон 🇷🇺
+      <small class="muted">Оставьте номер для уточнения деталей заказа</small>
+      <input name="phone" id="phone" required placeholder="+7 (___) ___-__-__" inputmode="tel">
+    </label>
+    <label>Адрес доставки (Сургут)<input name="address" placeholder="ул. Ленина, 5, кв. 12"></label>
+    <div class="two">
+      <label>Дата доставки<input type="date" name="delivery_date"></label>
+      <label>Время
+        <select name="delivery_time">
+          <option>Как можно быстрее (2 часа)</option>
+          <option>Утро 9:00–12:00</option>
+          <option>День 12:00–17:00</option>
+          <option>Вечер 17:00–21:00</option>
+        </select>
+      </label>
+    </div>
+    <label>Удобный способ связи
+      <small class="muted">Укажите удобный способ для подтверждения заказа</small>
+      <select name="contact_method">
+        <option>Телефонный звонок</option>
+        <option>WhatsApp</option>
+        <option>Telegram</option>
+      </select>
+    </label>
+    <button id="submit-btn" class="btn btn-main big" type="submit">Отправить заказ</button>
+  </form>
+</main>
+
+<!-- Модалка успеха -->
+<div id="success-modal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-icon">🌸</div>
+    <h2>Заказ принят!</h2>
+    <p>Спасибо за заказ <b>№<span id="order-number"></span></b></p>
+    <p class="muted">Наш флорист свяжется с вами в течение 15 минут для подтверждения.</p>
+    <button id="close-modal" class="btn btn-main">Отлично</button>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<footer class="foot">Bloom · Сургут · 9:00–21:00</footer>
+<script src="js/common.js"></script><script src="js/order.js"></script></body></html>

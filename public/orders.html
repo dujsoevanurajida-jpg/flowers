@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Заказы — Bloom Сургут</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:16px; overflow:hidden; }
+  th, td { padding:12px 14px; text-align:left; border-bottom:1px solid #f0dce4; font-size:14px; }
+  th { background:#8E1F4A; color:#fff; }
+  tr.order-row { cursor:pointer; }
+  tr.order-row:hover { background:#FBE9EE; }
+  .items { background:#fdf3f7; }
+  .items td { padding-left:30px; font-size:13px; color:#6b5b65; }
+  .status { font-weight:700; }
+  .status.new { color:#c77700; }
+  .empty { text-align:center; padding:40px; color:#8a7a84; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="logo" href="index.html">Bloom</a>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="catalog.html">Каталог</a>
+    <a href="order.html">Оформление</a>
+    <a href="orders.html" class="active">Заказы</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <h1>Все заказы</h1>
+  <p class="muted">Данные берутся напрямую из базы SQLite (таблица <code>orders</code>). Кликни на заказ — покажутся позиции.</p>
+  <table>
+    <thead>
+      <tr><th>№</th><th>Клиент</th><th>Телефон</th><th>Адрес</th><th>Дата/время</th><th>Связь</th><th>Сумма</th><th>Статус</th><th>Создан</th></tr>
+    </thead>
+    <tbody id="orders-body"></tbody>
+  </table>
+</main>
+
+<footer class="foot">Bloom · Сургут · 9:00–21:00</footer>
+
+<script>
+const money = n => n.toLocaleString('ru-RU') + ' ₽';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function load() {
+  const orders = await fetch('/api/orders').then(r => r.json());
+  const body = document.getElementById('orders-body');
+  if (!orders.length) {
+    body.innerHTML = '<tr><td colspan="9" class="empty">Заказов пока нет. Оформите тестовый заказ на странице «Оформление».</td></tr>';
+    return;
+  }
+  body.innerHTML = orders.map(o => `
+    <tr class="order-row" data-id="${o.id}">
+      <td><b>№${o.id}</b></td>
+      <td>${esc(o.customer_name)}</td>
+      <td>${esc(o.phone)}</td>
+      <td>${esc(o.address) || '—'}</td>
+      <td>${esc(o.delivery_date) || 'быстро'} · ${esc(o.delivery_time) || ''}</td>
+      <td>${esc(o.contact_method) || '—'}</td>
+      <td><b>${money(o.total)}</b></td>
+      <td class="status ${o.status}">${o.status === 'new' ? '🆕 новый' : o.status}</td>
+      <td>${esc(o.created_at)}</td>
+    </tr>`).join('');
+}
+
+// Клик по строке — показать позиции заказа
+document.getElementById('orders-body').addEventListener('click', async e => {
+  const row = e.target.closest('.order-row'); if (!row) return;
+  const id = row.dataset.id;
+  const existing = row.nextElementSibling;
+  if (existing?.classList.contains('items')) { existing.remove(); return; }
+  const order = await fetch('/api/orders/' + id).then(r => r.json());
+  const tr = document.createElement('tr');
+  tr.className = 'items';
+  tr.innerHTML = `<td colspan="9">Состав заказа: ${
+    order.items.map(i => `${esc(i.name)} × ${i.qty} = ${money(i.price * i.qty)}`).join(' &nbsp;|&nbsp; ')
+  }</td>`;
+  row.after(tr);
+});
+
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Каталог — Bloom Сургут</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <a class="logo" href="index.html">Bloom</a>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="catalog.html" class="active">Каталог</a>
+    <a href="order.html">Оформление <span id="cart-count" class="badge">0</span></a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <h1>Каталог</h1>
+  <p class="muted">Все букеты собираем в день заказа в Сургуте.</p>
+  <div id="filters" class="chips">
+    <button class="chip active" data-cat="all">Все</button>
+    <button class="chip" data-cat="roses">Розы</button>
+    <button class="chip" data-cat="spring">Весенние</button>
+    <button class="chip" data-cat="premium">Премиум</button>
+  </div>
+  <div id="products" class="grid"></div>
+</main>
+
+<div id="toast" class="toast"></div>
+<footer class="foot">Bloom · Сургут · 9:00–21:00</footer>
+<script src="js/common.js"></script>
+<script src="js/catalog.js"></script>
+</body>
+</html>
